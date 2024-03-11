@@ -10,6 +10,10 @@ build:
       - tar xvfz sqlite-autoconf-3310100.tar.gz; cd sqlite-autoconf-3310100; ls; ./configure; make; make install; cd ..
       - rm -rf sqlite-autoconf-3310100
       - rm sqlite-autoconf-3310100.tar.gz
+      - echo $LD_LIBRARY_PATH
+      - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+      - export LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH
+      - echo $LD_LIBRARY_PATH
     build:
       - bundle install --without devlopment test
       - ./bin/rails assets:precompile
