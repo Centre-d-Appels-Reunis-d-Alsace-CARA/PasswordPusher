@@ -6,6 +6,7 @@ build:
       - PYTHON=python2 amazon-linux-extras install -y postgresql9.6
     build:
       - gem install psych
+      - gem install sqlite3 --no-document
       - bundle install --without devlopment test
       - ./bin/rails assets:precompile
       - ./bin/rails db:setup
