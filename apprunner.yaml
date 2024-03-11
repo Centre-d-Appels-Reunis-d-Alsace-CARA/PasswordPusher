@@ -3,9 +3,9 @@ runtime: ruby31
 build:
   commands:
     pre-build:
-      - yum install sqlite-devel -y
-      - yum install mariadb-devel -y
-      - amazon-linux-extras install -y postgresql9.6
+      - yum update -y
+      - yum install sqlite-devel mariadb-devel -y
+      - PYTHON=python2 amazon-linux-extras install -y postgresql9.6
     build:
       - bundle install --without devlopment test
       - ./bin/rails assets:precompile
