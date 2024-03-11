@@ -2,9 +2,9 @@
 
 source "https://rubygems.org"
 
-ruby ENV["CUSTOM_RUBY_VERSION"] || ">=3.1.4"
+#ruby ENV["CUSTOM_RUBY_VERSION"] || ">=3.1.4"
 
-gem "rails", "~> 7.1.3"
+#gem "rails", "~> 7.1.3"
 
 group :development do
   gem "listen"
@@ -112,7 +112,7 @@ gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 # Database backends
 gem "mysql2"
 gem "pg", require: false
-#gem "sqlite3", require: false
+gem "sqlite3"
 
 group :production do
   gem "rack-throttle", "0.7.0"
