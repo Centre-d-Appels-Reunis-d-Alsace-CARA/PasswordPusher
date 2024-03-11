@@ -7,13 +7,7 @@ build:
       - yum install gcc g++ make -y
       - PYTHON=python2 amazon-linux-extras install -y postgresql9.6
       - wget https://www.sqlite.org/2020/sqlite-autoconf-3310100.tar.gz
-      - tar xvfz sqlite-autoconf-3310100.tar.gz
-      - cd sqlite-autoconf-3310100
-      - ls
-      - ./configure
-      - make
-      - make install
-      - cd ..
+      - tar xvfz sqlite-autoconf-3310100.tar.gz; cd sqlite-autoconf-3310100; ls; ./configure; make; make install; cd ..
       - rm -rf sqlite-autoconf-3310100
       - rm sqlite-autoconf-3310100.tar.gz
     build:
