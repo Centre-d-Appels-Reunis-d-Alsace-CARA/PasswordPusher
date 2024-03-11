@@ -7,19 +7,9 @@ on:
       - "release"
       - "v*.*.*"
 
-  workflow_dispatch:
-    inputs:
-      dockerPush:
-        description: 'Push image to docker hub?'
-        required: true
-        type: boolean
-        default: false
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    # Run every day at 5:24 UTC - build 'latest' docker containers
-    - cron: "24 17 * * *"
 env:
-  DOCKER_PUSH: true
+  AWS_REGION: eu-west-1
+  ECR_REPOSITORY: password-pusher
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,36 +23,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Populate Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/pwpush
-          flavor: |
-            latest=false
-          tags: |
-            type=match,pattern=release
-            type=schedule,pattern=latest
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=semver,pattern=latest
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActions
+          role-session-name: GitHubActions
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          file: ./containers/docker/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          provenance: false
-          push: true
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/pwpush:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/pwpush:buildcache,mode=max,ignore-error=${{env.DOCKER_PUSH == 'false'}}
-
+      - name: Build and push Docker image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --push .
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
