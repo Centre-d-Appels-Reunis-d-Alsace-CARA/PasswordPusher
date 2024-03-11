@@ -5,7 +5,7 @@ build:
     pre-build:
       - yum install sqlite-devel -y
       - yum install mariadb-devel -y
-      - yum install postgresql93-devel -y
+      - amazon-linux-extras install -y postgresql9.6
     build:
       - bundle install --without devlopment test
       - ./bin/rails assets:precompile
