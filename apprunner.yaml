@@ -4,7 +4,7 @@ build:
   commands:
     pre-build:
       - yum update -y
-      - yum install sqlite sqlite-devel mariadb-devel -y
+      - yum install sqlite3 sqlite3-devel mariadb-devel -y
       - PYTHON=python2 amazon-linux-extras install -y postgresql9.6
     build:
       - bundle install --without devlopment test
