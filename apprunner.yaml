@@ -11,7 +11,10 @@ build:
       - ./bin/rails db:setup
 run:
   env:
-    RAILS_ENV: production
+    - name: RAILS_ENV
+      value: "production"
+    - name: DATABASE_URL
+      value: "arn:aws:secretsmanager:eu-west-1:214587030740:secret:EMI/PasswordPusher-kIdgs2:DATABASE_URL::"
   network:
     port: 5100
   command: ./bin/rails server --environment=production
