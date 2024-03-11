@@ -4,7 +4,7 @@ build:
   commands:
     pre-build:
       - yum install sqlite-devel -y
-      - yum install MariaDB-shared MariaDB-devel -y
+      - yum install mariadb-devel -y
     build:
       - bundle install --without devlopment test
       - ./bin/rails assets:precompile
