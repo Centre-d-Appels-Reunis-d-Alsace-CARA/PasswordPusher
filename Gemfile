@@ -112,7 +112,7 @@ gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 # Database backends
 gem "mysql2"
 gem "pg", require: false
-gem "sqlite3", require: false
+#gem "sqlite3", require: false
 
 group :production do
   gem "rack-throttle", "0.7.0"
