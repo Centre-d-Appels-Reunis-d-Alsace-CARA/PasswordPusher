@@ -1,0 +1,17 @@
+version: 1.0
+runtime: ruby3.1
+build:
+  commands:
+    pre-build:
+      - yum install sqlite-devel -y
+      - yum install MariaDB-shared MariaDB-devel -y
+    build:
+      - bundle install --without devlopment test
+      - ./bin/rails assets:precompile
+      - ./bin/rails db:setup
+run:
+  env:
+    RAILS_ENV: production
+  network:
+    port: 5100
+  command: ./bin/rails server --environment=production
